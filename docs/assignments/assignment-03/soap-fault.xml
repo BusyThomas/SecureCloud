@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:sc="https://api.securecloud.example.com/scan">
+  <soap:Body>
+    <soap:Fault>
+      <faultcode>soap:Client</faultcode>
+      <faultstring>The submitted file did not pass the security scan.</faultstring>
+      <soap:detail>
+        <sc:ScanFault>
+          <sc:code>THREAT_DETECTED</sc:code>
+          <sc:message>A potentially harmful file was detected.</sc:message>
+          <sc:retryable>false</sc:retryable>
+        </sc:ScanFault>
+      </soap:detail>
+    </soap:Fault>
+  </soap:Body>
+</soap:Envelope>

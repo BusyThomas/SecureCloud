@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="https://api.securecloud.example.com/scan"
+    targetNamespace="https://api.securecloud.example.com/scan"
+    name="FileScanService">
+
+  <wsdl:types>
+    <xsd:schema
+        targetNamespace="https://api.securecloud.example.com/scan"
+        elementFormDefault="qualified">
+      <xsd:simpleType name="ScanVerdict">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="CLEAN"/>
+          <xsd:enumeration value="INFECTED"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+
+      <xsd:complexType name="ScanCredentials">
+        <xsd:sequence>
+          <xsd:element name="clientId" type="xsd:string"/>
+          <xsd:element name="token" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="ScanFileInput">
+        <xsd:sequence>
+          <xsd:element name="requestId" type="xsd:string"/>
+          <xsd:element name="fileId" type="xsd:string"/>
+          <xsd:element name="sha256" type="xsd:string"/>
+          <xsd:element name="mediaType" type="xsd:string"/>
+          <xsd:element name="downloadUrl" type="xsd:anyURI"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="ScanFileOutput">
+        <xsd:sequence>
+          <xsd:element name="requestId" type="xsd:string"/>
+          <xsd:element name="verdict" type="tns:ScanVerdict"/>
+          <xsd:element name="scannedAt" type="xsd:dateTime"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="ScanFault">
+        <xsd:sequence>
+          <xsd:element name="code" type="xsd:string"/>
+          <xsd:element name="message" type="xsd:string"/>
+          <xsd:element name="retryable" type="xsd:boolean"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="ScanCredentials" type="tns:ScanCredentials"/>
+      <xsd:element name="ScanFile" type="tns:ScanFileInput"/>
+      <xsd:element name="ScanFileResponse" type="tns:ScanFileOutput"/>
+      <xsd:element name="ScanFault" type="tns:ScanFault"/>
+    </xsd:schema>
+  </wsdl:types>
+
+  <wsdl:message name="ScanCredentialsHeader">
+    <wsdl:part name="credentials" element="tns:ScanCredentials"/>
+  </wsdl:message>
+  <wsdl:message name="ScanFileRequest">
+    <wsdl:part name="parameters" element="tns:ScanFile"/>
+  </wsdl:message>
+  <wsdl:message name="ScanFileResponseMessage">
+    <wsdl:part name="parameters" element="tns:ScanFileResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ScanFaultMessage">
+    <wsdl:part name="fault" element="tns:ScanFault"/>
+  </wsdl:message>
+
+  <wsdl:portType name="FileScanPortType">
+    <wsdl:operation name="ScanFile">
+      <wsdl:input message="tns:ScanFileRequest"/>
+      <wsdl:output message="tns:ScanFileResponseMessage"/>
+      <wsdl:fault name="ScanFault" message="tns:ScanFaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="FileScanSoapBinding" type="tns:FileScanPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ScanFile">
+      <soap:operation soapAction="https://api.securecloud.example.com/scan/ScanFile" style="document"/>
+      <wsdl:input>
+        <soap:header message="tns:ScanCredentialsHeader" part="credentials" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ScanFault">
+        <soap:fault name="ScanFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="FileScanService">
+    <wsdl:port name="FileScanPort" binding="tns:FileScanSoapBinding">
+      <soap:address location="https://scanner.partner.example.com/soap/FileScanService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

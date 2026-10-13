@@ -1,0 +1,723 @@
+# Assignment 4 live curl transcript
+
+Captured against the same working SecureCloud API. Authorization is present because the later Assignment 5 layer requires its header; it does not validate the demo value.
+
+## Register file metadata (201)
+
+**PowerShell command:**
+```powershell
+curl.exe --http1.1 --silent --show-error --verbose --include 'http://localhost:5000/api/files' --header 'Authorization: Bearer assignment-demo-token' --header 'Content-Type: application/json' --header 'Idempotency-Key: assignment4-final-20261013-001' --data-binary '{"ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","name":"assignment4-evidence-report.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+
+**curl -v trace:**
+```text
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* Established connection to localhost (::1 port 5000) from ::1 port 53424 
+* using HTTP/1.x
+> POST /api/files HTTP/1.1
+
+> Host: localhost:5000
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Authorization: Bearer assignment-demo-token
+
+> Content-Type: application/json
+
+> Idempotency-Key: assignment4-final-20261013-001
+
+> Content-Length: 223
+
+> 
+
+} [223 bytes data]
+* upload completely sent off: 223 bytes
+< HTTP/1.1 201 Created
+
+< Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+
+< Cross-Origin-Opener-Policy: same-origin
+
+< Cross-Origin-Resource-Policy: same-origin
+
+< Origin-Agent-Cluster: ?1
+
+< Referrer-Policy: no-referrer
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+< X-Content-Type-Options: nosniff
+
+< X-DNS-Prefetch-Control: off
+
+< X-Download-Options: noopen
+
+< X-Frame-Options: SAMEORIGIN
+
+< X-Permitted-Cross-Domain-Policies: none
+
+< X-XSS-Protection: 0
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+
+< Cache-Control: no-store
+
+< X-RateLimit-Limit: 100
+
+< X-RateLimit-Remaining: 86
+
+< Vary: Accept, Accept-Encoding
+
+< Location: /api/files/595f2ea3-02f4-4f33-b675-3aa5630b4cb7
+
+< ETag: "f3098f4254f60095ddcd00e8ac59a8ff35730c0f6f7d9cfde28fb028ea547d2c"
+
+< Content-Type: application/json; charset=utf-8
+
+< Content-Length: 379
+
+< Date: Tue, 13 Oct 2026 17:16:57 GMT
+
+< Connection: keep-alive
+
+< Keep-Alive: timeout=5
+
+< 
+
+{ [379 bytes data]
+* Connection #0 to host localhost:5000 left intact
+```
+
+**Response:**
+```http
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 86
+Vary: Accept, Accept-Encoding
+Location: /api/files/595f2ea3-02f4-4f33-b675-3aa5630b4cb7
+ETag: "f3098f4254f60095ddcd00e8ac59a8ff35730c0f6f7d9cfde28fb028ea547d2c"
+Content-Type: application/json; charset=utf-8
+Content-Length: 379
+Date: Tue, 13 Oct 2026 17:16:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":"595f2ea3-02f4-4f33-b675-3aa5630b4cb7","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment4-evidence-report.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:16:57.098Z","updatedAt":"2026-10-13T17:16:57.098Z"}
+```
+
+## Repeat create with the same Idempotency-Key
+
+**PowerShell command:**
+```powershell
+curl.exe --http1.1 --silent --show-error --verbose --include 'http://localhost:5000/api/files' --header 'Authorization: Bearer assignment-demo-token' --header 'Content-Type: application/json' --header 'Idempotency-Key: assignment4-final-20261013-001' --data-binary '{"ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","name":"assignment4-evidence-report.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+
+**curl -v trace:**
+```text
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* Established connection to localhost (::1 port 5000) from ::1 port 53426 
+* using HTTP/1.x
+> POST /api/files HTTP/1.1
+
+> Host: localhost:5000
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Authorization: Bearer assignment-demo-token
+
+> Content-Type: application/json
+
+> Idempotency-Key: assignment4-final-20261013-001
+
+> Content-Length: 223
+
+> 
+
+} [223 bytes data]
+* upload completely sent off: 223 bytes
+< HTTP/1.1 201 Created
+
+< Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+
+< Cross-Origin-Opener-Policy: same-origin
+
+< Cross-Origin-Resource-Policy: same-origin
+
+< Origin-Agent-Cluster: ?1
+
+< Referrer-Policy: no-referrer
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+< X-Content-Type-Options: nosniff
+
+< X-DNS-Prefetch-Control: off
+
+< X-Download-Options: noopen
+
+< X-Frame-Options: SAMEORIGIN
+
+< X-Permitted-Cross-Domain-Policies: none
+
+< X-XSS-Protection: 0
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+
+< Cache-Control: no-store
+
+< X-RateLimit-Limit: 100
+
+< X-RateLimit-Remaining: 85
+
+< Vary: Accept, Accept-Encoding
+
+< Location: /api/files/595f2ea3-02f4-4f33-b675-3aa5630b4cb7
+
+< ETag: "f3098f4254f60095ddcd00e8ac59a8ff35730c0f6f7d9cfde28fb028ea547d2c"
+
+< Content-Type: application/json; charset=utf-8
+
+< Content-Length: 379
+
+< Date: Tue, 13 Oct 2026 17:16:57 GMT
+
+< Connection: keep-alive
+
+< Keep-Alive: timeout=5
+
+< 
+
+{ [379 bytes data]
+* Connection #0 to host localhost:5000 left intact
+```
+
+**Response:**
+```http
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 85
+Vary: Accept, Accept-Encoding
+Location: /api/files/595f2ea3-02f4-4f33-b675-3aa5630b4cb7
+ETag: "f3098f4254f60095ddcd00e8ac59a8ff35730c0f6f7d9cfde28fb028ea547d2c"
+Content-Type: application/json; charset=utf-8
+Content-Length: 379
+Date: Tue, 13 Oct 2026 17:16:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":"595f2ea3-02f4-4f33-b675-3aa5630b4cb7","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment4-evidence-report.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:16:57.098Z","updatedAt":"2026-10-13T17:16:57.098Z"}
+```
+
+## Filtered file list (200)
+
+**PowerShell command:**
+```powershell
+curl.exe --http1.1 --silent --show-error --verbose --include 'http://localhost:5000/api/files?ownerId=8c71c880-fcb8-4ea8-a4e1-10c2118bd864&search=assignment4-evidence&page=1&pageSize=5' --header 'Authorization: Bearer assignment-demo-token'
+```
+
+**curl -v trace:**
+```text
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* Established connection to localhost (::1 port 5000) from ::1 port 53427 
+* using HTTP/1.x
+> GET /api/files?ownerId=8c71c880-fcb8-4ea8-a4e1-10c2118bd864&search=assignment4-evidence&page=1&pageSize=5 HTTP/1.1
+
+> Host: localhost:5000
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Authorization: Bearer assignment-demo-token
+
+> 
+
+* Request completely sent off
+< HTTP/1.1 200 OK
+
+< Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+
+< Cross-Origin-Opener-Policy: same-origin
+
+< Cross-Origin-Resource-Policy: same-origin
+
+< Origin-Agent-Cluster: ?1
+
+< Referrer-Policy: no-referrer
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+< X-Content-Type-Options: nosniff
+
+< X-DNS-Prefetch-Control: off
+
+< X-Download-Options: noopen
+
+< X-Frame-Options: SAMEORIGIN
+
+< X-Permitted-Cross-Domain-Policies: none
+
+< X-XSS-Protection: 0
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+
+< Cache-Control: no-store
+
+< X-RateLimit-Limit: 100
+
+< X-RateLimit-Remaining: 84
+
+< Vary: Accept, Accept-Encoding
+
+< Content-Type: application/json; charset=utf-8
+
+< Content-Length: 423
+
+< ETag: W/"1a7-TMltosFrBggYcAUudaBcpYU/y4c"
+
+< Date: Tue, 13 Oct 2026 17:16:57 GMT
+
+< Connection: keep-alive
+
+< Keep-Alive: timeout=5
+
+< 
+
+{ [423 bytes data]
+* Connection #0 to host localhost:5000 left intact
+```
+
+**Response:**
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 84
+Vary: Accept, Accept-Encoding
+Content-Type: application/json; charset=utf-8
+Content-Length: 423
+ETag: W/"1a7-TMltosFrBggYcAUudaBcpYU/y4c"
+Date: Tue, 13 Oct 2026 17:16:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"items":[{"id":"595f2ea3-02f4-4f33-b675-3aa5630b4cb7","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment4-evidence-report.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:16:57.098Z","updatedAt":"2026-10-13T17:16:57.098Z"}],"page":1,"pageSize":5,"total":1}
+```
+
+## Malformed JSON (400)
+
+**PowerShell command:**
+```powershell
+curl.exe --http1.1 --silent --show-error --verbose --include 'http://localhost:5000/api/files' --header 'Authorization: Bearer assignment-demo-token' --header 'Content-Type: application/json' --header 'Idempotency-Key: assignment4-malformed-final' --data-binary '{"ownerId":'
+```
+
+**curl -v trace:**
+```text
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* Established connection to localhost (::1 port 5000) from ::1 port 53428 
+* using HTTP/1.x
+> POST /api/files HTTP/1.1
+
+> Host: localhost:5000
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Authorization: Bearer assignment-demo-token
+
+> Content-Type: application/json
+
+> Idempotency-Key: assignment4-malformed-final
+
+> Content-Length: 11
+
+> 
+
+} [11 bytes data]
+* upload completely sent off: 11 bytes
+< HTTP/1.1 400 Bad Request
+
+< Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+
+< Cross-Origin-Opener-Policy: same-origin
+
+< Cross-Origin-Resource-Policy: same-origin
+
+< Origin-Agent-Cluster: ?1
+
+< Referrer-Policy: no-referrer
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+< X-Content-Type-Options: nosniff
+
+< X-DNS-Prefetch-Control: off
+
+< X-Download-Options: noopen
+
+< X-Frame-Options: SAMEORIGIN
+
+< X-Permitted-Cross-Domain-Policies: none
+
+< X-XSS-Protection: 0
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+
+< Cache-Control: no-store
+
+< X-RateLimit-Limit: 100
+
+< X-RateLimit-Remaining: 83
+
+< Vary: Accept, Accept-Encoding
+
+< Content-Type: application/problem+json; charset=utf-8
+
+< Content-Length: 151
+
+< ETag: W/"97-atKLpqjA6LK7PzdYN9deQ8tgSr0"
+
+< Date: Tue, 13 Oct 2026 17:16:57 GMT
+
+< Connection: keep-alive
+
+< Keep-Alive: timeout=5
+
+< 
+
+{ [151 bytes data]
+* Connection #0 to host localhost:5000 left intact
+```
+
+**Response:**
+```http
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 83
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 151
+ETag: W/"97-atKLpqjA6LK7PzdYN9deQ8tgSr0"
+Date: Tue, 13 Oct 2026 17:16:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/malformed-json","title":"Malformed JSON","status":400,"detail":"The request body is not valid JSON."}
+```
+
+## Unknown file (404)
+
+**PowerShell command:**
+```powershell
+curl.exe --http1.1 --silent --show-error --verbose --include 'http://localhost:5000/api/files/00000000-0000-4000-8000-000000000001' --header 'Authorization: Bearer assignment-demo-token'
+```
+
+**curl -v trace:**
+```text
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* Established connection to localhost (::1 port 5000) from ::1 port 53429 
+* using HTTP/1.x
+> GET /api/files/00000000-0000-4000-8000-000000000001 HTTP/1.1
+
+> Host: localhost:5000
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Authorization: Bearer assignment-demo-token
+
+> 
+
+* Request completely sent off
+< HTTP/1.1 404 Not Found
+
+< Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+
+< Cross-Origin-Opener-Policy: same-origin
+
+< Cross-Origin-Resource-Policy: same-origin
+
+< Origin-Agent-Cluster: ?1
+
+< Referrer-Policy: no-referrer
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+< X-Content-Type-Options: nosniff
+
+< X-DNS-Prefetch-Control: off
+
+< X-Download-Options: noopen
+
+< X-Frame-Options: SAMEORIGIN
+
+< X-Permitted-Cross-Domain-Policies: none
+
+< X-XSS-Protection: 0
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+
+< Cache-Control: no-store
+
+< X-RateLimit-Limit: 100
+
+< X-RateLimit-Remaining: 82
+
+< Vary: Accept, Accept-Encoding
+
+< Content-Type: application/problem+json; charset=utf-8
+
+< Content-Length: 140
+
+< ETag: W/"8c-TLYqHDCf0MFmlFnAOzB49fG8vh4"
+
+< Date: Tue, 13 Oct 2026 17:16:57 GMT
+
+< Connection: keep-alive
+
+< Keep-Alive: timeout=5
+
+< 
+
+{ [140 bytes data]
+* Connection #0 to host localhost:5000 left intact
+```
+
+**Response:**
+```http
+HTTP/1.1 404 Not Found
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 82
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 140
+ETag: W/"8c-TLYqHDCf0MFmlFnAOzB49fG8vh4"
+Date: Tue, 13 Oct 2026 17:16:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/file-not-found","title":"File Not Found","status":404,"detail":"The file does not exist."}
+```
+
+## Illegal restore of an active file (409)
+
+**PowerShell command:**
+```powershell
+curl.exe --http1.1 --silent --show-error --verbose --include 'http://localhost:5000/api/files/595f2ea3-02f4-4f33-b675-3aa5630b4cb7/restore' --header 'Authorization: Bearer assignment-demo-token'
+```
+
+**curl -v trace:**
+```text
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* Established connection to localhost (::1 port 5000) from ::1 port 53430 
+* using HTTP/1.x
+> GET /api/files/595f2ea3-02f4-4f33-b675-3aa5630b4cb7/restore HTTP/1.1
+
+> Host: localhost:5000
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Authorization: Bearer assignment-demo-token
+
+> 
+
+* Request completely sent off
+< HTTP/1.1 405 Method Not Allowed
+
+< Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+
+< Cross-Origin-Opener-Policy: same-origin
+
+< Cross-Origin-Resource-Policy: same-origin
+
+< Origin-Agent-Cluster: ?1
+
+< Referrer-Policy: no-referrer
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+< X-Content-Type-Options: nosniff
+
+< X-DNS-Prefetch-Control: off
+
+< X-Download-Options: noopen
+
+< X-Frame-Options: SAMEORIGIN
+
+< X-Permitted-Cross-Domain-Policies: none
+
+< X-XSS-Protection: 0
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+
+< Cache-Control: no-store
+
+< X-RateLimit-Limit: 100
+
+< X-RateLimit-Remaining: 81
+
+< Vary: Accept, Accept-Encoding
+
+< Allow: POST, OPTIONS
+
+< Content-Type: application/problem+json; charset=utf-8
+
+< Content-Length: 151
+
+< ETag: W/"97-O/nYGGr1b+E0FCcdn6nbHC1pgAk"
+
+< Date: Tue, 13 Oct 2026 17:16:57 GMT
+
+< Connection: keep-alive
+
+< Keep-Alive: timeout=5
+
+< 
+
+{ [151 bytes data]
+* Connection #0 to host localhost:5000 left intact
+```
+
+**Response:**
+```http
+HTTP/1.1 405 Method Not Allowed
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 81
+Vary: Accept, Accept-Encoding
+Allow: POST, OPTIONS
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 151
+ETag: W/"97-O/nYGGr1b+E0FCcdn6nbHC1pgAk"
+Date: Tue, 13 Oct 2026 17:16:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/method-not-allowed","title":"Method Not Allowed","status":405,"detail":"Use POST to restore a file."}
+```

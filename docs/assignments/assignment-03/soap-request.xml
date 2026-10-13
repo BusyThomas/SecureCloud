@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:sc="https://api.securecloud.example.com/scan">
+  <soap:Header>
+    <sc:ScanCredentials>
+      <sc:clientId>securecloud-file-service</sc:clientId>
+      <sc:token>PLACEHOLDER_ONLY_NOT_A_REAL_SECRET</sc:token>
+    </sc:ScanCredentials>
+  </soap:Header>
+  <soap:Body>
+    <sc:ScanFile>
+      <sc:requestId>scan-request-1001</sc:requestId>
+      <sc:fileId>file-reference-42</sc:fileId>
+      <sc:sha256>0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef</sc:sha256>
+      <sc:mediaType>application/pdf</sc:mediaType>
+      <sc:downloadUrl>https://storage.securecloud.example.com/temporary/file-reference-42?expires=2026-10-13T22%3A10%3A00Z&amp;signature=EXAMPLE</sc:downloadUrl>
+    </sc:ScanFile>
+  </soap:Body>
+</soap:Envelope>

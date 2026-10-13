@@ -1,0 +1,36 @@
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="securecloud-services" name="SecureCloud Services">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="identity" value="Identity Service&#xa;Owner: to be assigned&#xa;Owns: users, password hashes, account status&#xa;&#xa;registerUser&#xa;authenticateUser&#xa;getUserAccessStatus&#xa;deactivateUser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="280" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="files" value="File Service&#xa;Owner: to be assigned&#xa;Owns: folders, file metadata, versions, object keys&#xa;&#xa;uploadFile&#xa;getFile&#xa;listFiles&#xa;moveFile&#xa;deleteFile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="220" width="300" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="sharing" value="Sharing Service&#xa;Owner: to be assigned&#xa;Owns: share records, permissions, expiry&#xa;&#xa;shareFile&#xa;getShare&#xa;revokeShare" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="800" y="220" width="250" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="files-to-identity" value="getUserAccessStatus(owner)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=12;" edge="1" parent="1" source="files" target="identity">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="sharing-to-files" value="getFileOwner(file)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=12;" edge="1" parent="1" source="sharing" target="files">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="sharing-to-identity" value="getUserAccessStatus(recipient)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;dashed=1;fontSize=12;" edge="1" parent="1" source="sharing" target="identity">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="925" y="110"/>
+              <mxPoint x="200" y="110"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="caption" value="Services call each other through contracts. No service reads another service's tables." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="520" width="850" height="50" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

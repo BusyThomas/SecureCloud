@@ -1,0 +1,773 @@
+# Assignment 6 live curl transcript
+
+Captured 2026-10-13 against the updated SecureCloud File API. Each section includes the curl command and live HTTP response. The bearer value is a fake coursework placeholder; the API checks only that the Authorization header is non-empty. The main API runs on port 5004 to avoid changing the existing listener on port 5000.
+
+## Create file (201, Location and JSON body)
+
+```powershell
+curl -i -X POST http://localhost:5004/api/files -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Idempotency-Key: assignment6-live-final-20261013' --data-binary '{"ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+```http
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+Vary: Accept, Accept-Encoding
+Location: /api/files/8648a57b-b4ca-422d-9828-023a16c5b876
+ETag: "1ef9e729c9af25818c0491b1543de4ab84e569bc4259bd8aa05cf4b1138cd2b8"
+Content-Type: application/json; charset=utf-8
+Content-Length: 373
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":"8648a57b-b4ca-422d-9828-023a16c5b876","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:34:46.220Z","updatedAt":"2026-10-13T17:34:46.220Z"}
+```
+
+## Retry create with same idempotency key (201 replay)
+
+```powershell
+curl -i -X POST http://localhost:5004/api/files -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Idempotency-Key: assignment6-live-final-20261013' --data-binary '{"ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+```http
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 98
+Vary: Accept, Accept-Encoding
+Location: /api/files/8648a57b-b4ca-422d-9828-023a16c5b876
+ETag: "1ef9e729c9af25818c0491b1543de4ab84e569bc4259bd8aa05cf4b1138cd2b8"
+Content-Type: application/json; charset=utf-8
+Content-Length: 373
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":"8648a57b-b4ca-422d-9828-023a16c5b876","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:34:46.220Z","updatedAt":"2026-10-13T17:34:46.220Z"}
+```
+
+## Read as JSON (default representation)
+
+```powershell
+curl -i http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: private, max-age=60, must-revalidate
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 97
+Vary: Accept, Accept-Encoding
+ETag: "1ef9e729c9af25818c0491b1543de4ab84e569bc4259bd8aa05cf4b1138cd2b8"
+Content-Type: application/json; charset=utf-8
+Content-Length: 373
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":"8648a57b-b4ca-422d-9828-023a16c5b876","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:34:46.220Z","updatedAt":"2026-10-13T17:34:46.220Z"}
+```
+
+## Read the same file as XML
+
+```powershell
+curl -i http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/xml'
+```
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: private, max-age=60, must-revalidate
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 96
+Vary: Accept, Accept-Encoding
+ETag: "0b8807f28c19df0595fdc17249906ed098a501b9e694e52384dbc48db69cc737"
+Content-Type: application/xml; charset=utf-8
+Content-Length: 482
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+<?xml version="1.0" encoding="UTF-8"?><file><id>8648a57b-b4ca-422d-9828-023a16c5b876</id><ownerId>8c71c880-fcb8-4ea8-a4e1-10c2118bd864</ownerId><folderId/><name>assignment6-live-file.pdf</name><contentType>application/pdf</contentType><sizeBytes>128</sizeBytes><checksumSha256>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</checksumSha256><status>active</status><createdAt>2026-10-13T17:34:46.220Z</createdAt><updatedAt>2026-10-13T17:34:46.220Z</updatedAt></file>
+```
+
+## Conditional XML GET (304, no body)
+
+```powershell
+curl -i http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/xml' -H 'If-None-Match: "0b8807f28c19df0595fdc17249906ed098a501b9e694e52384dbc48db69cc737"'
+```
+```http
+HTTP/1.1 304 Not Modified
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: private, max-age=60, must-revalidate
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+Vary: Accept
+ETag: "0b8807f28c19df0595fdc17249906ed098a501b9e694e52384dbc48db69cc737"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+```
+
+## Conditional PATCH (200)
+
+```powershell
+curl -i -X PATCH http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'If-Match: "1ef9e729c9af25818c0491b1543de4ab84e569bc4259bd8aa05cf4b1138cd2b8"' --data-binary '{"name":"assignment6-renamed-file.pdf"}'
+```
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 94
+Vary: Accept, Accept-Encoding
+ETag: "475c0cb54a6c1063787d6fcbcc7f403af7db9cf39ab741728ab1c8017e57fd7c"
+Content-Type: application/json; charset=utf-8
+Content-Length: 376
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":"8648a57b-b4ca-422d-9828-023a16c5b876","ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","folderId":null,"name":"assignment6-renamed-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"active","createdAt":"2026-10-13T17:34:46.220Z","updatedAt":"2026-10-13T17:34:46.418Z"}
+```
+
+## Stale If-Match (412)
+
+```powershell
+curl -i -X PATCH http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'If-Match: "1ef9e729c9af25818c0491b1543de4ab84e569bc4259bd8aa05cf4b1138cd2b8"' --data-binary '{"name":"stale-name.pdf"}'
+```
+```http
+HTTP/1.1 412 Precondition Failed
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 93
+Vary: Accept, Accept-Encoding
+ETag: "475c0cb54a6c1063787d6fcbcc7f403af7db9cf39ab741728ab1c8017e57fd7c"
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 194
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/precondition-failed","title":"Precondition Failed","status":412,"detail":"The file has changed. Read it again and retry with its current ETag."}
+```
+
+## Missing If-Match (428)
+
+```powershell
+curl -i -X PATCH http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' --data-binary '{"name":"missing-precondition.pdf"}'
+```
+```http
+HTTP/1.1 428 Precondition Required
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 92
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 180
+ETag: W/"b4-EvU2dW+VbapS/dchtZWQtBsiWXg"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/precondition-required","title":"Precondition Required","status":428,"detail":"Send the current file ETag in the If-Match header."}
+```
+
+## Field-level validation (422, all invalid fields reported)
+
+```powershell
+curl -i -X POST http://localhost:5004/api/files -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Idempotency-Key: assignment6-invalid-fields' --data-binary '{"ownerId":"not-a-uuid","name":"","contentType":"application/pdf","sizeBytes":-1,"checksumSha256":"bad"}'
+```
+```http
+HTTP/1.1 422 Unprocessable Entity
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 91
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 660
+ETag: W/"294-eSDGQ2BUediUS7CAN8HfLL/5/ME"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/invalid-file","title":"Invalid file","status":422,"detail":"ownerId: A valid user UUID is required. name: A file name between 1 and 255 characters is required. sizeBytes: The file size must be a non-negative safe integer. checksumSha256: A 64-character SHA-256 checksum is required.","errors":[{"field":"ownerId","message":"A valid user UUID is required."},{"field":"name","message":"A file name between 1 and 255 characters is required."},{"field":"sizeBytes","message":"The file size must be a non-negative safe integer."},{"field":"checksumSha256","message":"A 64-character SHA-256 checksum is required."}]}
+```
+
+## Missing idempotency key (400)
+
+```powershell
+curl -i -X POST http://localhost:5004/api/files -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' --data-binary '{"ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+```http
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 90
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 202
+ETag: W/"ca-h/zWfudYX8jezdzsOfvGjvlRyPo"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/idempotency-key-required","title":"Idempotency-Key Required","status":400,"detail":"Send a non-empty Idempotency-Key header of at most 128 characters."}
+```
+
+## Missing Authorization header (401)
+
+```powershell
+curl -i 'http://localhost:5004/api/files?ownerId=8c71c880-fcb8-4ea8-a4e1-10c2118bd864' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 89
+Vary: Accept, Accept-Encoding
+WWW-Authenticate: Bearer realm="SecureCloud API"
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 168
+ETag: W/"a8-zg19Obp1ii9O7HohESxGHL7WiWE"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/authentication-required","title":"Unauthorized","status":401,"detail":"A non-empty Authorization header is required."}
+```
+
+## Unknown file (404)
+
+```powershell
+curl -i http://localhost:5004/api/files/00000000-0000-4000-8000-000000000001 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 404 Not Found
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 88
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 140
+ETag: W/"8c-TLYqHDCf0MFmlFnAOzB49fG8vh4"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/file-not-found","title":"File Not Found","status":404,"detail":"The file does not exist."}
+```
+
+## Invalid file ID (400)
+
+```powershell
+curl -i http://localhost:5004/api/files/not-a-uuid -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 87
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 151
+ETag: W/"97-1MNsMTDvn+JOIZ+OYTdqKrjq7tM"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/invalid-file-id","title":"Invalid File ID","status":400,"detail":"The file ID must be a valid UUID."}
+```
+
+## Illegal restore transition (409)
+
+```powershell
+curl -i -X POST http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876/restore -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 409 Conflict
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 86
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 162
+ETag: W/"a2-6d9GuQIRjxDEOFoaP72y040twcM"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/file-state-conflict","title":"File State Conflict","status":409,"detail":"Only a deleted file can be restored."}
+```
+
+## Unsupported Accept (406)
+
+```powershell
+curl -i http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: text/plain'
+```
+```http
+HTTP/1.1 406 Not Acceptable
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 85
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 176
+ETag: W/"b0-CHEp8Z6AquKBwW2Te3dn85/mkPY"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/not-acceptable","title":"Not Acceptable","status":406,"detail":"This service can return application/json or application/xml."}
+```
+
+## Unsupported HTTP method (405)
+
+```powershell
+curl -i -X PUT http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json' -H 'Content-Type: application/json' --data-binary '{}'
+```
+```http
+HTTP/1.1 405 Method Not Allowed
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 84
+Vary: Accept, Accept-Encoding
+Allow: GET, HEAD, PATCH, DELETE, OPTIONS
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 176
+ETag: W/"b0-s7Y5Mjog5YMt5Y8DGFbM72lRUJc"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/method-not-allowed","title":"Method Not Allowed","status":405,"detail":"The requested method is not supported for this file."}
+```
+
+## Unknown owner (422)
+
+```powershell
+curl -i -X POST http://localhost:5004/api/files -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Idempotency-Key: assignment6-unknown-owner' --data-binary '{"ownerId":"38d2f9e1-2506-4a1b-85b5-692e0c110972","name":"not-created.pdf","contentType":"application/pdf","sizeBytes":1,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+```http
+HTTP/1.1 422 Unprocessable Entity
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 83
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 160
+ETag: W/"a0-1l+vXYlY1+qwRwF8vOyvNMDn74Q"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/owner-unavailable","title":"Owner Unavailable","status":422,"detail":"The file owner account does not exist."}
+```
+
+## Unavailable Identity dependency (503 with Retry-After)
+
+```powershell
+curl -i -X POST http://localhost:5003/api/files -H 'Authorization: Bearer demo-assignment-token' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Idempotency-Key: assignment6-identity-unavailable' --data-binary '{"ownerId":"8c71c880-fcb8-4ea8-a4e1-10c2118bd864","name":"assignment6-live-file.pdf","contentType":"application/pdf","sizeBytes":128,"checksumSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+```
+```http
+HTTP/1.1 503 Service Unavailable
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+Vary: Accept, Accept-Encoding
+Retry-After: 1
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 205
+ETag: W/"cd-br/TG87DkVNI06dRYG0sxvRElmI"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/identity-service-unavailable","title":"Identity Service Unavailable","status":503,"detail":"The Identity Service could not be reached after safe retries."}
+```
+
+## Rate-limit first request (200)
+
+```powershell
+curl -i 'http://localhost:5002/api/files?ownerId=8c71c880-fcb8-4ea8-a4e1-10c2118bd864' -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 1
+X-RateLimit-Remaining: 0
+Vary: Accept, Accept-Encoding
+Content-Type: application/json; charset=utf-8
+Content-Length: 45
+ETag: W/"2d-SWQWVebeMo9ZRPuqVQK4nqoEL+0"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"items":[],"page":1,"pageSize":20,"total":0}
+```
+
+## Rate limit exceeded (429 with Retry-After)
+
+```powershell
+curl -i 'http://localhost:5002/api/files?ownerId=8c71c880-fcb8-4ea8-a4e1-10c2118bd864' -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 1
+X-RateLimit-Remaining: 0
+Retry-After: 60
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 203
+ETag: W/"cb-2QQ/JBPuWCl1LzSsEh3WSE222nk"
+Vary: Accept-Encoding
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/rate-limit-exceeded","title":"Too Many Requests","status":429,"detail":"The client request limit has been reached. Try again after the indicated delay."}
+```
+
+## Delete file (204)
+
+```powershell
+curl -i -X DELETE http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 204 No Content
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 82
+Vary: Accept
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+```
+
+## Repeat delete (404)
+
+```powershell
+curl -i -X DELETE http://localhost:5004/api/files/8648a57b-b4ca-422d-9828-023a16c5b876 -H 'Authorization: Bearer demo-assignment-token' -H 'Accept: application/json'
+```
+```http
+HTTP/1.1 404 Not Found
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Allow,ETag,Location,Retry-After,X-RateLimit-Limit,X-RateLimit-Remaining
+Cache-Control: no-store
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 81
+Vary: Accept, Accept-Encoding
+Content-Type: application/problem+json; charset=utf-8
+Content-Length: 140
+ETag: W/"8c-TLYqHDCf0MFmlFnAOzB49fG8vh4"
+Date: Tue, 13 Oct 2026 17:34:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"type":"https://securecloud.example.com/problems/file-not-found","title":"File Not Found","status":404,"detail":"The file does not exist."}
+```
+

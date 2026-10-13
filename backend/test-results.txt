@@ -1,0 +1,130 @@
+
+> backend@1.0.0 test
+> node --test
+
+TAP version 13
+# ◇ injected env (4) from .env
+# Subtest: create returns 201, Location, and a public representation
+ok 1 - create returns 201, Location, and a public representation
+  ---
+  duration_ms: 86.6656
+  ...
+# Subtest: a repeated create with the same key returns the original result
+ok 2 - a repeated create with the same key returns the original result
+  ---
+  duration_ms: 23.5425
+  ...
+# Subtest: an idempotency replay returns the original result after later changes
+ok 3 - an idempotency replay returns the original result after later changes
+  ---
+  duration_ms: 30.8174
+  ...
+# Subtest: concurrent creates with the same key create one file
+ok 4 - concurrent creates with the same key create one file
+  ---
+  duration_ms: 16.3206
+  ...
+# Subtest: reusing an idempotency key with a different body returns 409
+ok 5 - reusing an idempotency key with a different body returns 409
+  ---
+  duration_ms: 12.3989
+  ...
+# Subtest: validation collects every invalid field in one 422 problem response
+ok 6 - validation collects every invalid field in one 422 problem response
+  ---
+  duration_ms: 7.7124
+  ...
+# Subtest: XML negotiation returns an XML variant with its own ETag
+ok 7 - XML negotiation returns an XML variant with its own ETag
+  ---
+  duration_ms: 57.4988
+  ...
+# Subtest: an unavailable Identity Service returns 503 with Retry-After
+ok 8 - an unavailable Identity Service returns 503 with Retry-After
+  ---
+  duration_ms: 13.1238
+  ...
+# Subtest: Identity timeout retries once and succeeds on the next attempt
+ok 9 - Identity timeout retries once and succeeds on the next attempt
+  ---
+  duration_ms: 33.7524
+  ...
+# Subtest: PATCH validation reports multiple field errors before resource lookup
+ok 10 - PATCH validation reports multiple field errors before resource lookup
+  ---
+  duration_ms: 4.1448
+  ...
+# Subtest: an unknown file returns 404
+ok 11 - an unknown file returns 404
+  ---
+  duration_ms: 5.1494
+  ...
+# Subtest: list filters, sorts, and paginates through query parameters
+ok 12 - list filters, sorts, and paginates through query parameters
+  ---
+  duration_ms: 19.6302
+  ...
+# Subtest: delete and restore change file state and reject illegal transitions
+ok 13 - delete and restore change file state and reject illegal transitions
+  ---
+  duration_ms: 10.8301
+  ...
+# Subtest: single-file reads support ETags and conditional GET
+ok 14 - single-file reads support ETags and conditional GET
+  ---
+  duration_ms: 7.5551
+  ...
+# Subtest: PATCH requires a current If-Match ETag and changes the ETag
+ok 15 - PATCH requires a current If-Match ETag and changes the ETag
+  ---
+  duration_ms: 14.0224
+  ...
+# Subtest: authorization, content negotiation, method override, and OPTIONS are explicit
+ok 16 - authorization, content negotiation, method override, and OPTIONS are explicit
+  ---
+  duration_ms: 21.512
+  ...
+# Subtest: rate limits include retry headers and are tracked per client
+ok 17 - rate limits include retry headers and are tracked per client
+  ---
+  duration_ms: 0.5228
+  ...
+# Subtest: the HTTP rate limit returns 429 and Retry-After
+ok 18 - the HTTP rate limit returns 429 and Retry-After
+  ---
+  duration_ms: 11.2469
+  ...
+# Subtest: OPTIONS reports supported collection and file methods
+ok 19 - OPTIONS reports supported collection and file methods
+  ---
+  duration_ms: 4.8325
+  ...
+# Subtest: large JSON responses use gzip when the client accepts compression
+ok 20 - large JSON responses use gzip when the client accepts compression
+  ---
+  duration_ms: 95.4079
+  ...
+# Subtest: Identity 4xx is not retried
+ok 21 - Identity 4xx is not retried
+  ---
+  duration_ms: 5.2441
+  ...
+# Subtest: Identity 5xx is retried with exponential backoff and jitter
+ok 22 - Identity 5xx is retried with exponential backoff and jitter
+  ---
+  duration_ms: 5.1378
+  ...
+# Subtest: the local Identity Service demo exposes the Assignment 2 contract
+ok 23 - the local Identity Service demo exposes the Assignment 2 contract
+  ---
+  duration_ms: 7.2131
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 878.1637

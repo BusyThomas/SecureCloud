@@ -1,0 +1,753 @@
+openapi: 3.1.0
+info:
+  title: SecureCloud File Service
+  version: 1.0.0
+  description: File metadata API for the SecureCloud CS543 project. Successful representations support JSON by default and XML when requested with Accept; all failures use Problem Details JSON.
+servers:
+  - url: /api
+    description: API path on the local SecureCloud server (http://localhost:5000 by default)
+security:
+  - BearerAuth: []
+paths:
+  /files:
+    post:
+      operationId: createFile
+      summary: Register an uploaded file
+      description: Creates file metadata after checking the owner with the Identity Service.
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFile"
+      responses:
+        "201":
+          description: File created. Location points to the new file.
+          headers:
+            Location:
+              schema:
+                type: string
+            ETag:
+              $ref: "#/components/headers/ETag"
+            X-RateLimit-Limit:
+              $ref: "#/components/headers/RateLimitLimit"
+            X-RateLimit-Remaining:
+              $ref: "#/components/headers/RateLimitRemaining"
+            Vary:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "413":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/ValidationProblem"
+        "500":
+          $ref: "#/components/responses/Problem"
+        "502":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    get:
+      operationId: listFiles
+      summary: List files owned by a user
+      parameters:
+        - name: ownerId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: folderId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - name
+              - createdAt
+              - updatedAt
+              - sizeBytes
+            default: createdAt
+        - name: sortOrder
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+      responses:
+        "200":
+          description: A page of matching files.
+          headers:
+            X-RateLimit-Limit:
+              $ref: "#/components/headers/RateLimitLimit"
+            X-RateLimit-Remaining:
+              $ref: "#/components/headers/RateLimitRemaining"
+            Cache-Control:
+              $ref: "#/components/headers/CacheControl"
+            Content-Encoding:
+              schema:
+                type: string
+                enum:
+                  - gzip
+            Vary:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileList"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/FileList"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    options:
+      security: []
+      operationId: optionsFiles
+      summary: List methods supported by the file collection
+      responses:
+        "204":
+          description: No response body.
+          headers:
+            Allow:
+              $ref: "#/components/headers/Allow"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /files/{fileId}:
+    parameters:
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getFile
+      summary: Get one file
+      parameters:
+        - $ref: "#/components/parameters/IfNoneMatch"
+      responses:
+        "200":
+          description: File details.
+          headers:
+            ETag:
+              $ref: "#/components/headers/ETag"
+            Cache-Control:
+              $ref: "#/components/headers/CacheControl"
+            X-RateLimit-Limit:
+              $ref: "#/components/headers/RateLimitLimit"
+            X-RateLimit-Remaining:
+              $ref: "#/components/headers/RateLimitRemaining"
+            Content-Encoding:
+              schema:
+                type: string
+                enum:
+                  - gzip
+            Vary:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "304":
+          description: The cached file representation is still current.
+          headers:
+            ETag:
+              $ref: "#/components/headers/ETag"
+            Cache-Control:
+              $ref: "#/components/headers/CacheControl"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/Problem"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    patch:
+      operationId: updateFileMetadata
+      summary: Partially update a file's name or folder
+      parameters:
+        - $ref: "#/components/parameters/IfMatch"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchFile"
+      responses:
+        "200":
+          description: Updated file representation.
+          headers:
+            ETag:
+              $ref: "#/components/headers/ETag"
+            X-RateLimit-Limit:
+              $ref: "#/components/headers/RateLimitLimit"
+            X-RateLimit-Remaining:
+              $ref: "#/components/headers/RateLimitRemaining"
+            Vary:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "412":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/ValidationProblem"
+        "413":
+          $ref: "#/components/responses/Problem"
+        "428":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    post:
+      operationId: overrideFileMethod
+      summary: Use the documented method-override fallback
+      description: Send PATCH with If-Match and a PatchFile body, or DELETE with no body. This endpoint exists only for constrained clients.
+      parameters:
+        - $ref: "#/components/parameters/MethodOverride"
+        - $ref: "#/components/parameters/IfMatchOptional"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchFile"
+      responses:
+        "200":
+          description: File updated when X-HTTP-Method-Override is PATCH.
+          headers:
+            ETag:
+              $ref: "#/components/headers/ETag"
+            Vary:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/File"
+        "204":
+          description: File marked deleted when X-HTTP-Method-Override is DELETE.
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/ValidationProblem"
+        "413":
+          $ref: "#/components/responses/Problem"
+        "412":
+          $ref: "#/components/responses/Problem"
+        "428":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    delete:
+      operationId: deleteFile
+      summary: Move a file to the deleted state
+      responses:
+        "204":
+          description: File marked deleted; no response body.
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/Problem"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    options:
+      security: []
+      operationId: optionsFile
+      summary: List methods supported by a file
+      responses:
+        "204":
+          description: No response body.
+          headers:
+            Allow:
+              $ref: "#/components/headers/Allow"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /files/{fileId}/restore:
+    parameters:
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: restoreFile
+      summary: Restore a deleted file
+      responses:
+        "200":
+          description: The restored file.
+          headers:
+            ETag:
+              $ref: "#/components/headers/ETag"
+            Vary:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "406":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/Problem"
+    options:
+      security: []
+      operationId: optionsRestoreFile
+      summary: List methods supported by the restore action
+      responses:
+        "204":
+          description: No response body.
+          headers:
+            Allow:
+              $ref: "#/components/headers/Allow"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        "429":
+          $ref: "#/components/responses/RateLimited"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Header presence is checked for this assignment; tokens are not validated.
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Reuse the same key to safely repeat the same create request.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+    IfNoneMatch:
+      name: If-None-Match
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Return 304 when the current ETag matches.
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Must contain the current strong ETag to update the file.
+    IfMatchOptional:
+      name: If-Match
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Required when X-HTTP-Method-Override is PATCH.
+    MethodOverride:
+      name: X-HTTP-Method-Override
+      in: header
+      required: true
+      schema:
+        type: string
+        enum:
+          - PATCH
+          - DELETE
+      description: Optional fallback for clients that can send POST but not PATCH or DELETE.
+  schemas:
+    CreateFile:
+      type: object
+      additionalProperties: false
+      required:
+        - ownerId
+        - name
+        - contentType
+        - sizeBytes
+        - checksumSha256
+      properties:
+        ownerId:
+          type: string
+          format: uuid
+        folderId:
+          type:
+            - string
+            - "null"
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        contentType:
+          type: string
+        sizeBytes:
+          type: integer
+          minimum: 0
+        checksumSha256:
+          type: string
+          pattern: "^[0-9a-fA-F]{64}$"
+    PatchFile:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        folderId:
+          type:
+            - string
+            - "null"
+          format: uuid
+    File:
+      type: object
+      xml:
+        name: file
+      required:
+        - id
+        - ownerId
+        - folderId
+        - name
+        - contentType
+        - sizeBytes
+        - checksumSha256
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        folderId:
+          type:
+            - string
+            - "null"
+          format: uuid
+        name:
+          type: string
+        contentType:
+          type: string
+        sizeBytes:
+          type: integer
+        checksumSha256:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - deleted
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    FileList:
+      type: object
+      xml:
+        name: files
+      required:
+        - items
+        - page
+        - pageSize
+        - total
+      properties:
+        items:
+          type: array
+          xml:
+            name: items
+            wrapped: true
+          items:
+            xml:
+              name: item
+            $ref: "#/components/schemas/File"
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+    Problem:
+      type: object
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        errors:
+          type: array
+          description: Present on validation failures; reports each invalid field.
+          items:
+            type: object
+            required:
+              - field
+              - message
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+  responses:
+    Problem:
+      description: Request failed.
+      headers:
+        Cache-Control:
+          $ref: "#/components/headers/CacheControl"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemaining"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    ValidationProblem:
+      description: Validation failed; errors lists every invalid field.
+      headers:
+        Cache-Control:
+          $ref: "#/components/headers/CacheControl"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemaining"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Unauthorized:
+      description: Authorization header is missing or empty.
+      headers:
+        WWW-Authenticate:
+          schema:
+            type: string
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemaining"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    RateLimited:
+      description: Per-client request budget exceeded.
+      headers:
+        Cache-Control:
+          $ref: "#/components/headers/CacheControl"
+        Retry-After:
+          $ref: "#/components/headers/RetryAfter"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemaining"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    ServiceUnavailable:
+      description: A temporary dependency failure; retry after the indicated delay.
+      headers:
+        Retry-After:
+          $ref: "#/components/headers/RetryAfter"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControl"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    MethodNotAllowed:
+      description: The method is not supported for this resource.
+      headers:
+        Allow:
+          $ref: "#/components/headers/Allow"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemaining"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+  headers:
+    ETag:
+      description: Strong validator for this representation.
+      schema:
+        type: string
+    CacheControl:
+      description: Cache policy for the representation.
+      schema:
+        type: string
+    Allow:
+      description: Methods supported by the target resource.
+      schema:
+        type: string
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+    RetryAfter:
+      description: Seconds to wait before retrying.
+      schema:
+        type: integer

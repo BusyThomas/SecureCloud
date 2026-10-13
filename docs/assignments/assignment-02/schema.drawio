@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="securecloud-schema" name="SecureCloud ER Diagram">
+    <mxGraphModel dx="1200" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="users" value="IDENTITY SERVICE: users&#xa;PK user_id UUID&#xa;full_name VARCHAR(120)&#xa;email VARCHAR(254) UNIQUE&#xa;password_hash TEXT&#xa;role VARCHAR(20)&#xa;account_status VARCHAR(20)&#xa;created_at TIMESTAMPTZ&#xa;updated_at TIMESTAMPTZ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;spacing=8;align=left;" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="300" height="260" as="geometry"/>
+        </mxCell>
+        <mxCell id="folders" value="FILE SERVICE: folders&#xa;PK folder_id UUID&#xa;owner_user_id UUID (Identity reference)&#xa;parent_folder_id UUID (FK folders)&#xa;name VARCHAR(255)&#xa;created_at TIMESTAMPTZ&#xa;FK parent_folder_id + owner_user_id references folders" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;spacing=8;align=left;" vertex="1" parent="1">
+          <mxGeometry x="430" y="70" width="330" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="files" value="FILE SERVICE: files&#xa;PK file_id UUID&#xa;owner_user_id UUID (Identity reference)&#xa;folder_id UUID (FK folders)&#xa;original_name VARCHAR(255)&#xa;object_key TEXT UNIQUE&#xa;content_type VARCHAR(255)&#xa;size_bytes BIGINT&#xa;checksum_sha256 CHAR(64)&#xa;file_status VARCHAR(20)&#xa;created_at, updated_at TIMESTAMPTZ&#xa;FK folder_id + owner_user_id references folders" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;spacing=8;align=left;" vertex="1" parent="1">
+          <mxGeometry x="430" y="330" width="330" height="290" as="geometry"/>
+        </mxCell>
+        <mxCell id="versions" value="FILE SERVICE: file_versions&#xa;PK version_id UUID&#xa;FK file_id UUID&#xa;version_number INTEGER&#xa;object_key TEXT UNIQUE&#xa;size_bytes BIGINT&#xa;checksum_sha256 CHAR(64)&#xa;created_at TIMESTAMPTZ&#xa;UNIQUE (file_id, version_number)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;spacing=8;align=left;" vertex="1" parent="1">
+          <mxGeometry x="830" y="330" width="320" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="shares" value="SHARING SERVICE: shares&#xa;PK share_id UUID&#xa;file_id UUID (File reference)&#xa;owner_user_id UUID (Identity reference)&#xa;recipient_user_id UUID (Identity reference)&#xa;permission VARCHAR(10)&#xa;share_status VARCHAR(20)&#xa;expires_at TIMESTAMPTZ&#xa;created_at TIMESTAMPTZ&#xa;revoked_at TIMESTAMPTZ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;spacing=8;align=left;" vertex="1" parent="1">
+          <mxGeometry x="50" y="470" width="300" height="270" as="geometry"/>
+        </mxCell>
+        <mxCell id="folder-parent" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERzeroToMany;endFill=0;startFill=0;" edge="1" parent="1" source="folders" target="folders">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="790" y="40"/><mxPoint x="590" y="40"/></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="file-folder" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERzeroToMany;endFill=0;startFill=0;" edge="1" parent="1" source="files" target="folders">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="version-file" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERzeroToMany;endFill=0;startFill=0;" edge="1" parent="1" source="versions" target="files">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="note" value="Cross-service IDs are references only: there are no database foreign keys between service schemas." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="690" width="650" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
